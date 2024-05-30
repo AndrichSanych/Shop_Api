@@ -24,12 +24,12 @@ namespace Shop_Api.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult Get([FromRoute]int id)
+        public IActionResult Get([FromRoute] int id)
         {
             return Ok(productsService.Get(id));
         }
         [HttpPost]
-        public IActionResult Create([FromForm] CreateProductModel productModel )
+        public IActionResult Create([FromForm] CreateProductModel productModel)
         {
             productsService.Create(productModel);
             return Ok();
@@ -43,7 +43,7 @@ namespace Shop_Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult Delete([FromRoute]int id)
+        public IActionResult Delete([FromRoute] int id)
         {
             productsService.Delete(id);
             return Ok();

@@ -3,6 +3,7 @@ using BusinessLogic;
 using BusinessLogic.Interfaces;
 using DataAccess;
 using Microsoft.AspNetCore.Identity;
+using Shop_Api;
 
 var builder = WebApplication.CreateBuilder(args);
 var connStr = builder.Configuration.GetConnectionString("LocalDb")!;
@@ -35,6 +36,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseMiddleware<GlobalErrorHandler>();
 
 app.UseAuthorization();
 

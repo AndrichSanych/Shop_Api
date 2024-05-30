@@ -6,9 +6,11 @@ using DataAccess.Data.Entities;
 using DataAccess.Repositories;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Shop_Api;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,9 +23,9 @@ namespace BusinessLogic.Services
         private readonly IReposiroty<Product> productsR;
         private readonly IReposiroty<Category> categoriesR;
 
-        public ProductsService(IMapper mapper, 
+        public ProductsService(IMapper mapper,
                                 IReposiroty<Product> productsR,
-                                IReposiroty<Category> categoriesR) 
+                                IReposiroty<Category> categoriesR)
         {
             this.mapper = mapper;
             this.productsR = productsR;
@@ -38,16 +40,15 @@ namespace BusinessLogic.Services
 
         public void Delete(int id)
         {
+            if (id < 0) throw new HttpException("Id can not be negative.", HttpStatusCode.BadRequest);
+
             var product = productsR.GetByID(id);
-            if (product == null)
-            {
-                return;
-            }
-            else
-            {
-                productsR.Delete(product);
-                productsR.Save();
-            }
+
+            if (product == null) throw new HttpException("Product not found.", HttpStatusCode.NotFound);
+
+            productsR.Delete(product);
+            productsR.Save();
+
         }
 
         public void Edit(ProductDto product)
@@ -58,10 +59,11 @@ namespace BusinessLogic.Services
 
         public ProductDto? Get(int id)
         {
+            if (id < 0) throw new HttpException("Id can not be negative.", HttpStatusCode.BadRequest);
             var item = (productsR.GetByID(id));
-            if (item == null) return null; 
+            if (item == null) throw new HttpException("Product not found.", HttpStatusCode.NotFound);
 
-           // context.Entry(item).Reference(x => x.Category).Load();
+            // context.Entry(item).Reference(x => x.Category).Load();
 
             var dto = mapper.Map<ProductDto>(item);
 
@@ -70,7 +72,7 @@ namespace BusinessLogic.Services
 
         public IEnumerable<ProductDto> Get(IEnumerable<int> ids)
         {
-            return mapper.Map<List<ProductDto>>(productsR.Get(x => ids.Contains(x.Id), includeProperties: "Category"));                
+            return mapper.Map<List<ProductDto>>(productsR.Get(x => ids.Contains(x.Id), includeProperties: "Category"));
         }
 
         public IEnumerable<ProductDto> GetAll()
