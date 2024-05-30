@@ -60,7 +60,9 @@ namespace BusinessLogic.Services
         public ProductDto? Get(int id)
         {
             if (id < 0) throw new HttpException(ErrorsMesseges.IdMustPositive, HttpStatusCode.BadRequest);
+
             var item = (productsR.GetByID(id));
+
             if (item == null) throw new HttpException(ErrorsMesseges.ProductNotFound, HttpStatusCode.NotFound);
 
             // context.Entry(item).Reference(x => x.Category).Load();
