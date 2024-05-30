@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Interfaces;
+﻿using BusinessLogic.DTOs;
+using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
@@ -26,6 +27,26 @@ namespace Shop_Api.Controllers
         public IActionResult Get([FromRoute]int id)
         {
             return Ok(productsService.Get(id));
+        }
+        [HttpPost]
+        public IActionResult Create([FromForm] CreateProductModel productModel )
+        {
+            productsService.Create(productModel);
+            return Ok();
+        }
+
+        [HttpPut]
+        public IActionResult Edit([FromBody] ProductDto product)
+        {
+            productsService.Edit(product);
+            return Ok();
+        }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete([FromRoute]int id)
+        {
+            productsService.Delete(id);
+            return Ok();
         }
     }
 }
