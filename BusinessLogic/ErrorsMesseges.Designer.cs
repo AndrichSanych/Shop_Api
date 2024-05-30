@@ -70,7 +70,7 @@ namespace BusinessLogic {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Product not found.
         /// </summary>
         internal static string ProductNotFound {
             get {
