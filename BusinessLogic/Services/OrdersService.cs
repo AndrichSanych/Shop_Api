@@ -3,6 +3,7 @@ using BusinessLogic.DTOs;
 using BusinessLogic.Interfaces;
 using DataAccess.Data;
 using DataAccess.Data.Entities;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services
@@ -10,19 +11,23 @@ namespace BusinessLogic.Services
     internal class OrdersService : IOrdersService
     {
         private readonly IMapper mapper;
-        private readonly ShopDbContext context;
+        private readonly IReposiroty<Order> orderR;
+        private readonly IReposiroty<Product> productR;
+
+        // private readonly ShopDbContext context;
         private readonly IBasketService basketService;
 
-        public OrdersService(IMapper mapper, ShopDbContext context, IBasketService basketService) 
+        public OrdersService(IMapper mapper, IReposiroty<Order> orderR, IReposiroty<Product> productR, IBasketService basketService) 
         {
             this.mapper = mapper;
-            this.context = context;
+            this.orderR = orderR;
+            this.productR = productR;
             this.basketService = basketService;
         }
         public void Create(string userId)
         {
             var ids = basketService.GetProductsIds();
-            var products = context.Products.Where(x => ids.Contains(x.Id)).ToList();
+            var products = productR.Get(x => ids.Contains(x.Id)).ToList();
             var order = new Order()
             {
                 Date = DateTime.Now,
@@ -31,13 +36,13 @@ namespace BusinessLogic.Services
                 TotalPrice = products.Sum(x => x.Price),
             };
 
-            context.Orders.Add(order);
-            context.SaveChanges();            
+            orderR.Insert(order);
+            orderR.Save();             
         }
 
         public Task<IEnumerable<OrderDto>> GetAllByUser(string userId)
         {
-            var items = context.Orders.Include(x => x.Products).Where(x => x.UserId == userId).ToList();
+            var items = orderR.Get(x => x.UserId == userId, includeProperties: "Products"); 
             return (Task<IEnumerable<OrderDto>>)mapper.Map<IEnumerable<OrderDto>>(items);
         }
 
