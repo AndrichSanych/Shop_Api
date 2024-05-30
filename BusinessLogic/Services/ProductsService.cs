@@ -5,7 +5,6 @@ using DataAccess.Data;
 using DataAccess.Data.Entities;
 using DataAccess.Repositories;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Shop_Api;
 using System;
 using System.Collections.Generic;

@@ -4,7 +4,7 @@ using BusinessLogic.Interfaces;
 using DataAccess.Data;
 using DataAccess.Data.Entities;
 using DataAccess.Repositories;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace BusinessLogic.Services
 {
