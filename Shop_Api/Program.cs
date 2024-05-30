@@ -15,6 +15,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext(connStr);
 builder.Services.AddIdentity();
+builder.Services.AddRepositories();
 
 builder.Services.AddAutoMapper();
 builder.Services.AddFluentValidators();
