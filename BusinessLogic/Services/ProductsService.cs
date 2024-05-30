@@ -40,11 +40,11 @@ namespace BusinessLogic.Services
 
         public void Delete(int id)
         {
-            if (id < 0) throw new HttpException("Id can not be negative.", HttpStatusCode.BadRequest);
+            if (id < 0) throw new HttpException(ErrorsMesseges.IdMustPositive, HttpStatusCode.BadRequest);
 
             var product = productsR.GetByID(id);
 
-            if (product == null) throw new HttpException("Product not found.", HttpStatusCode.NotFound);
+            if (product == null) throw new HttpException(ErrorsMesseges.ProductNotFound, HttpStatusCode.NotFound);
 
             productsR.Delete(product);
             productsR.Save();
@@ -59,9 +59,9 @@ namespace BusinessLogic.Services
 
         public ProductDto? Get(int id)
         {
-            if (id < 0) throw new HttpException("Id can not be negative.", HttpStatusCode.BadRequest);
+            if (id < 0) throw new HttpException(ErrorsMesseges.IdMustPositive, HttpStatusCode.BadRequest);
             var item = (productsR.GetByID(id));
-            if (item == null) throw new HttpException("Product not found.", HttpStatusCode.NotFound);
+            if (item == null) throw new HttpException(ErrorsMesseges.ProductNotFound, HttpStatusCode.NotFound);
 
             // context.Entry(item).Reference(x => x.Category).Load();
 
