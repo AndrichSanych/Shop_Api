@@ -17,22 +17,25 @@ namespace BusinessLogic.Services
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
+        private readonly IJwtService jwtService;
         private readonly IMapper mapper;
 
-        public AccountsService(UserManager<User> userManager , IMapper mapper,
-                               SignInManager<User> signInManager)
+        public AccountsService(UserManager<User> userManager, IMapper mapper,
+                               SignInManager<User> signInManager,
+                               IJwtService jwtService)
         {
             this.userManager = userManager;
             this.mapper = mapper;
             this.signInManager = signInManager;
+            this.jwtService = jwtService;
         }
         public async Task Register(RegisterModel model)
         {
-          var user = await userManager.FindByEmailAsync(model.Email);
+            var user = await userManager.FindByEmailAsync(model.Email);
             if (user != null)
-                throw new HttpException("Email is already exist.",HttpStatusCode.BadRequest);
+                throw new HttpException("Email is already exist.", HttpStatusCode.BadRequest);
 
-            
+
             var newUser = mapper.Map<User>(model);
             var result = await userManager.CreateAsync(newUser, model.Password);
 
@@ -40,19 +43,28 @@ namespace BusinessLogic.Services
                 throw new HttpException(string.Join(" ", result.Errors.Select(x => x.Description)), HttpStatusCode.BadRequest);
         }
 
-        public async Task Login(LoginModel model)
+        public async Task<LoginDto> Login(LoginModel model)
         {
             var user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
                 throw new HttpException("Invalid user login or password.", HttpStatusCode.BadRequest);
 
+            await signInManager.SignInAsync(user, true);
+
+            return new LoginDto
+            {
+                Token = jwtService.CreateToken(jwtService.GetClaims(user))
+            };
         }
 
         public async Task Logout()
         {
             await signInManager.SignOutAsync();
         }
-
     }
 }
+
+
+     
+

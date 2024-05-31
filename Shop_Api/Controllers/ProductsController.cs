@@ -1,9 +1,11 @@
 ﻿using BusinessLogic.DTOs;
 using BusinessLogic.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using System.Net;
 
 namespace Shop_Api.Controllers
 {
@@ -24,7 +26,7 @@ namespace Shop_Api.Controllers
             return Ok(productsService.GetAll());
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet("{id:int}")]
         public IActionResult Get([FromRoute] int id)
         {

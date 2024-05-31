@@ -26,8 +26,7 @@ namespace Shop_Api.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            await accountsService.Login(model);
-            return Ok();
+            return Ok(await accountsService.Login(model));
         }
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()

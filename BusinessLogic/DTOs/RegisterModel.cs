@@ -1,5 +1,5 @@
-﻿ namespace BusinessLogic.DTOs
-    
+﻿namespace BusinessLogic.DTOs
+
 {
     public class RegisterModel
     {
