@@ -24,6 +24,11 @@ namespace BusinessLogic.Profiles
 
             CreateMap<CreateProductModel, Product>()
                 .ForMember(x => x.ImageUrl, opt => opt.MapFrom(src => fileService.SaveProductImage(src.Image).Result));
+
+            CreateMap<RegisterModel, User>()
+                .ForMember(x => x.UserName, opts => opts.MapFrom(s => s.Email));
         }
+
     }
+
 }

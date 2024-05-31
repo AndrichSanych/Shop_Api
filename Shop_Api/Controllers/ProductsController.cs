@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.DTOs;
 using BusinessLogic.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
@@ -23,6 +24,7 @@ namespace Shop_Api.Controllers
             return Ok(productsService.GetAll());
         }
 
+        [Authorize]
         [HttpGet("{id:int}")]
         public IActionResult Get([FromRoute] int id)
         {

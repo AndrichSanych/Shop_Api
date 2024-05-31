@@ -17,12 +17,10 @@ namespace BusinessLogic
     public static class ServiceExtensions
     {
         public static void AddAutoMapper(this IServiceCollection services)
-        {
-            //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+        {           
             services.AddSingleton(provider => new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new ApplicationProfile(provider.CreateScope().ServiceProvider.GetService<IFileService>()!));
-
             }).CreateMapper());
         }
 
@@ -33,9 +31,10 @@ namespace BusinessLogic
             services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
         }
 
-        public static void AddCustomServices(this IServiceCollection services) 
+        public static void AddCustomServices(this IServiceCollection services)
         {
             services.AddScoped<IProductsService, ProductsService>();
+            services.AddScoped<IAccountsService, AccountsService>();
             services.AddScoped<IOrdersService, OrdersService>();
             services.AddScoped<IFileService, LocalFileService>();
         }
