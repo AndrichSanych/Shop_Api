@@ -1,12 +1,13 @@
 ﻿using DataAccess.Data.Entities;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection;
 
 namespace Shop_APi.Helpers
 {
-    public enum Roles
+   public static class Roles
     {
-        User,
-        Admin
+        public const string ADMIN = "admin";
+        public const string USER = "user";
     }
 
     public static class Seeder
@@ -15,7 +16,11 @@ namespace Shop_APi.Helpers
         {
             var roleManager = app.GetRequiredService<RoleManager<IdentityRole>>();
 
-            foreach (var role in Enum.GetNames(typeof(Roles)))
+            var roles = typeof(Roles).GetFields(
+                BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Select(x => (string)x.GetValue(null)!);
+
+            foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                 {
@@ -44,7 +49,7 @@ namespace Shop_APi.Helpers
                 var result = await userManager.CreateAsync(user, PASSWORD);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, Roles.Admin.ToString());
+                    await userManager.AddToRoleAsync(user, Roles.ADMIN);
                 }
             }
         }

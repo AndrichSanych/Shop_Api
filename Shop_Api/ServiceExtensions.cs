@@ -2,9 +2,15 @@
 using BusinessLogic.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using DataAccess.Data.Entities;
 
 namespace Shop_Api
 {
+    public static class Policies
+    {
+        public const string PREMIUM_CLIENT = "PremiumClient";
+        public const string ADULT = "Adult"; 
+    }
     public static class ServiceExtensions
     {
         public static void AddJWT(this IServiceCollection services, IConfiguration configuration)
@@ -26,6 +32,11 @@ namespace Shop_Api
                     };
                 });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.PREMIUM_CLIENT, policy =>
+                policy.RequireClaim("ClientType", ClientType.Premium.ToString()));
+            });
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using Shop_APi.Helpers;
 using System.Net;
 
 namespace Shop_Api.Controllers
@@ -33,6 +34,7 @@ namespace Shop_Api.Controllers
             return Ok(productsService.Get(id));
         }
         [HttpPost]
+
         public IActionResult Create([FromForm] CreateProductModel productModel)
         {
             productsService.Create(productModel);
@@ -46,6 +48,7 @@ namespace Shop_Api.Controllers
             return Ok();
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.ADMIN)]
         [HttpDelete("{id:int}")]
         public IActionResult Delete([FromRoute] int id)
         {

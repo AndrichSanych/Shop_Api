@@ -4,6 +4,7 @@ using BusinessLogic.Interfaces;
 using DataAccess;
 using Microsoft.AspNetCore.Identity;
 using Shop_Api;
+using Shop_APi.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 var connStr = builder.Configuration.GetConnectionString("LocalDb")!;
@@ -19,7 +20,7 @@ builder.Services.AddDbContext(connStr);
 builder.Services.AddIdentity();
 builder.Services.AddRepositories();
 
-builder.Services.AddAuthentication();
+//builder.Services.AddAuthentication();
 
 builder.Services.AddAutoMapper();
 builder.Services.AddFluentValidators();
@@ -29,6 +30,11 @@ builder.Services.AddScoped<IBasketService, BasketService>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.SeedRoles().Wait();
+    scope.ServiceProvider.SeedAdmin().Wait();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
